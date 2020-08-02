@@ -67,3 +67,4 @@ gem 'slim-rails'
 gem 'html2slim'
 gem 'bootstrap', ">= 4.3.1"
 gem 'rails_autolink'
+gem 'sidekiq'
