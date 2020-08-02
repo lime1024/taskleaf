@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  app:
+    container_name: taskleaf_app
+    build: .
+    command: bundle exec rails s
+    environment:
+      - RAILS_ENV=development
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - 3000:3000
+    depends_on:
+      - redis
+    volumes:
+      - .:/var/taskleaf
+  redis:
+    container_name: taskleaf_redis
+    image: redis
+    ports:
+      - 16379:6379
+    command: redis-server
+  sidekiq:
+    container_name: taskleaf_sidekiq
+    build: .
+    environment:
+      - RAILS_ENV=development
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/var/taskleaf
+    depends_on:
+      - redis
+    command: bundle exec sidekiq
+  db:
+    container_name: taskleaf_db
+    image: postgres:11
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: taskleaf
+      POSTGRES_PASSWORD: password
